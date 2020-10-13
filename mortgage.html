@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css2?family=Karla&display=swap" rel="stylesheet">
+    <title>Online Mortgage Calculator!</title>
+    <style>
+      body{
+        text-align: center;
+        font-family: 'Karla', sans-serif;
+        background-image: url(https://picsum.photos/id/1040/3000/2000);
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+      }
+      .hidden{
+        visibility: hidden;
+      }
+      .input-div {
+        margin-top: 10px;
+      }
+      button {
+        margin-top: 10px;
+        border: none;
+        background-color: transparent;
+      }
+      button:hover {
+        transform: scale(1.5);
+      }
+       
+    </style>
+  </head>
+  <body>
+    <h1>Online Mortgage Calculator!</h1>
+    <form>
+      <div class="input-div">
+        <label for="principal">How much is the loan?</label>
+        <input type="number" name="principal" id="principal" min="0" required/>
+      </div>
+      <div class="input-div">
+        <label for="rate">How much is the rate?</label>
+        <input type="number" name="rate" min="0" id="rate" required />
+      </div>
+      <div class="input-div">
+        <label for="term">What is the term of the loan?</label>
+        <select id="term">
+          <option value="15">15 year fixed</option>
+          <option value="30">30 year fixed</option>
+        </select>
+      </div>
+      <button type="submit" class="button">Submit</button>
+    </form>
+    <div id="answer" class="hidden">
+      <h2>Your monthly payment is:<span id="payment"></span></h2>
+    </div>
+    <script>
+      // And here!
+      const principalInput = document.querySelector("#principal");
+      const rateInput = document.querySelector("#rate");
+      const termInput = document.querySelector("#term");
+      const payment = document.querySelector("#payment");
+      const answer = document.querySelector("#answer");
+      const form = document.querySelector("form");
+
+      function handleSubmitForm(event) {
+        event.preventDefault();
+        const principal = Number(principalInput.value);
+        const rate = Number(rateInput.value);
+        const term = Number(termInput.value);
+        const monthlyPayment = calculateMonthlyPayment(principal, rate, term);
+        payment.textContent = ` $${monthlyPayment.toFixed(2)}`
+        answer.classList.remove("hidden")
+
+      }
+
+      form.addEventListener('submit', handleSubmitForm)
+      // Don't worry about the math...
+      // Just use this function the same way as the example in README.md
+      function calculateMonthlyPayment(principal, annualRate, numberOfYears){
+        const monthlyRate = annualRate / 12 / 100
+        const numberOfPayments = numberOfYears * 12
+        const numerator = monthlyRate * (1 + monthlyRate) ** numberOfPayments
+        const denominator = (1 + monthlyRate) ** numberOfPayments - 1
+        return principal * (numerator / denominator)
+      }
+    </script>
+  </body>
+</html>
